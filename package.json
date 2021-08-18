@@ -1,0 +1,26 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "Api for movies explorer website",
+  "main": "app.js",
+  "scripts": {
+    "start": "npm app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alkremn/movies-explorer-api.git"
+  },
+  "author": "Alexey Kremnev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alkremn/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/alkremn/movies-explorer-api#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

@@ -56,12 +56,11 @@ module.exports.createMovie = (req, res, next) => {
       res.send(movie);
     })
     .catch((err) => {
-      if (err.name === 'VaidationError') {
+      if (err.name === 'VaidationError' || err.name === 'MongoError') {
         const error = new Error(err.message);
         error.statusCode = INVALID_DATA_ERROR;
         next(error);
       } else {
-        console.log(err);
         const error = new Error('Internal Server error');
         error.statusCode = SERVER_ERROR;
         next(error);
@@ -74,7 +73,7 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(movieId)
     .then((card) => {
       if (!card) {
-        const error = new Error('Card not found');
+        const error = new Error('Movie not found');
         error.statusCode = NOT_FOUND_ERROR;
         throw error;
       }

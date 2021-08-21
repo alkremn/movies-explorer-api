@@ -2,13 +2,13 @@ const express = require('express');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 
+require('dotenv').config();
+
 const cors = require('./middlewares/cors');
 const limiter = require('./configs/ratelimiter');
 const routes = require('./routes/index');
 const { notFound, errorHandler } = require('./middlewares/errors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-
-require('dotenv').config();
 
 const app = express();
 

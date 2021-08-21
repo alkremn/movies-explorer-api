@@ -4,7 +4,7 @@
   "description": "Api for movies explorer website",
   "main": "app.js",
   "scripts": {
-    "start": "npm app.js",
+    "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "npx eslint ."
   },

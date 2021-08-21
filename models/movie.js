@@ -3,7 +3,7 @@ const validator = require('validator');
 
 const movieSchema = new Schema({
   movieId: {
-    type: String,
+    type: Number,
     required: true,
     unique: true,
   },
@@ -35,21 +35,21 @@ const movieSchema = new Schema({
     type: String,
     required: true,
     validate: {
-      validator: (url) => validator.isUrl(url),
+      validator: (url) => validator.isURL(url),
     },
   },
   trailer: {
     type: String,
     required: true,
     validate: {
-      validator: (url) => validator.isUrl(url),
+      validator: (url) => validator.isURL(url),
     },
   },
   thumbnail: {
     type: String,
     required: true,
     validate: {
-      validator: (url) => validator.isUrl(url),
+      validator: (url) => validator.isURL(url),
     },
   },
   director: {

@@ -1,7 +1,7 @@
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const allowedOrigins = [
-  'http://akremn.students.nomoredomains.club',
-  'https://akremn.students.nomoredomains.club',
+  'http://alkremn.movies-explorer.nomoredomains.rocks',
+  'https://alkremn.movies-explorer.nomoredomains.rocks',
   'http://localhost:3000',
 ];
 

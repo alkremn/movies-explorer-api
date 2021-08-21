@@ -2,10 +2,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const SECRET_KEY =
-  process.env.NODE_ENV !== 'production'
-    ? 'Some_secret_key'
-    : process.env.JWT_SECRET_KEY;
+const SECRET_KEY = process.env.NODE_ENV !== 'production'
+  ? 'Some_secret_key'
+  : process.env.JWT_SECRET_KEY;
 
 const {
   SERVER_ERROR,
@@ -18,13 +17,11 @@ const {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
-    .then((user) =>
-      res.send({
-        token: jwt.sign({ _id: user._id }, SECRET_KEY, {
-          expiresIn: '7d',
-        }),
-      })
-    )
+    .then((user) => res.send({
+      token: jwt.sign({ _id: user._id }, SECRET_KEY, {
+        expiresIn: '7d',
+      }),
+    }))
     .catch((err) => {
       const error = new Error(err.message);
       error.statusCode = AUTH_ERROR;
@@ -74,7 +71,6 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  console.log(req.user);
   User.findById(req.user._id)
     .then((user) => res.send(user))
     .catch((err) => {
@@ -92,7 +88,7 @@ module.exports.updateUser = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((user) => {
       if (!user) {

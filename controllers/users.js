@@ -1,14 +1,35 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+
+const SECRET_KEY =
+  process.env.NODE_ENV !== 'production'
+    ? 'Some_secret_key'
+    : process.env.JWT_SECRET_KEY;
 
 const {
   SERVER_ERROR,
   CONFLICT_ERROR,
   INVALID_DATA_ERROR,
+  AUTH_ERROR,
+  NOT_FOUND_ERROR,
 } = require('../error_codes');
 
-module.exports.login = (req, res) => {
-  console.log(req);
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+  User.findUserByCredentials(email, password)
+    .then((user) =>
+      res.send({
+        token: jwt.sign({ _id: user._id }, SECRET_KEY, {
+          expiresIn: '7d',
+        }),
+      })
+    )
+    .catch((err) => {
+      const error = new Error(err.message);
+      error.statusCode = AUTH_ERROR;
+      next(error);
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -50,4 +71,55 @@ module.exports.createUser = (req, res, next) => {
         }
       });
   });
+};
+
+module.exports.getUser = (req, res, next) => {
+  console.log(req.user);
+  User.findById(req.user._id)
+    .then((user) => res.send(user))
+    .catch((err) => {
+      const error = new Error(err.message);
+      error.statusCode = SERVER_ERROR;
+      next(error);
+    });
+};
+
+module.exports.updateUser = (req, res, next) => {
+  const { email, name } = req.body;
+  User.findByIdAndUpdate(
+    req.user._id,
+    { email, name },
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
+    .then((user) => {
+      if (!user) {
+        const error = new Error('User not found');
+        error.statusCode = NOT_FOUND_ERROR;
+        throw error;
+      }
+      res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        _id: user._id,
+      });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        const error = new Error(err.message);
+        error.statusCode = INVALID_DATA_ERROR;
+        next(error);
+      } else if (err.statusCode === 404) {
+        const error = new Error('Not Found');
+        error.statusCode = err.statusCode;
+        next(error);
+      } else {
+        const error = new Error('Internal Server error');
+        error.statusCode = SERVER_ERROR;
+        next(error);
+      }
+    });
 };

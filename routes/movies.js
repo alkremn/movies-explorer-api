@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Segments, Joi } = require('celebrate');
+const validator = require('validator');
 const auth = require('../middlewares/auth');
 
 const {
@@ -20,20 +21,28 @@ router.post(
       year: Joi.string().required(),
       description: Joi.string().required(),
       image: Joi.string()
-        .pattern(
-          /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/,
-        )
-        .required(),
+        .required()
+        .custom((value, helpers) => {
+          if (validator.isURL(value)) {
+            return value;
+          }
+          return helpers.message('Invalid Avatar link');
+        }),
+
       trailer: Joi.string()
-        .pattern(
-          /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/,
-        )
-        .required(),
-      thumbnail: Joi.string()
-        .pattern(
-          /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/,
-        )
-        .required(),
+        .required()
+        .custom((value, helpers) => {
+          if (validator.isURL(value)) {
+            return value;
+          }
+          return helpers.message('Invalid Trailer link');
+        }),
+      thumbnail: Joi.string().custom((value, helpers) => {
+        if (validator.isURL(value)) {
+          return value;
+        }
+        return helpers.message('Invalid Tumbnail link');
+      }),
       movieId: Joi.required(),
       nameRU: Joi.string().required(),
       nameEN: Joi.string().required(),

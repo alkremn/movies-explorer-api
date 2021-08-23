@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const { AUTH_ERROR } = require('../error_codes');
+const { DEV_SECRET_KEY } = require('../configs/config');
 
 const SECRET_KEY = process.env.NODE_ENV !== 'production'
-  ? 'Some_secret_key'
+  ? DEV_SECRET_KEY
   : process.env.JWT_SECRET_KEY;
 
 module.exports = (req, res, next) => {
@@ -21,7 +22,6 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, SECRET_KEY);
   } catch (err) {
-    console.log(err);
     err.statusCode = AUTH_ERROR;
     next(err);
     return;

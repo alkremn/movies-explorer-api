@@ -13,11 +13,15 @@ module.exports.notFound = (req, res, next) => {
 
 module.exports.errorHandler = (err, req, res, next) => {
   if (err.statusCode) {
-    res.status(err.statusCode).send({ message: err.message });
+    res.status(err.statusCode).send({ error: err.message });
   } else if (isCelebrateError(err)) {
-    res.status(INVALID_DATA_ERROR).send({ message: err.details.get('body') });
+    res.status(INVALID_DATA_ERROR).send({
+      error: err.details.get('body')
+        ? err.details.get('body').message
+        : err.details.get('params').message,
+    });
   } else {
-    res.status(SERVER_ERROR).send({ message: 'Internal Server Error' });
+    res.status(SERVER_ERROR).send({ error: 'Internal Server Error' });
   }
   next();
 };

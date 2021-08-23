@@ -1,9 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { DEV_SECRET_KEY } = require('../configs/config');
 
 const SECRET_KEY = process.env.NODE_ENV !== 'production'
-  ? 'Some_secret_key'
+  ? DEV_SECRET_KEY
   : process.env.JWT_SECRET_KEY;
 
 const {
@@ -39,11 +40,6 @@ module.exports.createUser = (req, res, next) => {
       name,
     })
       .then((user) => {
-        if (!user) {
-          const error = new Error('Internal Server Error');
-          error.status = SERVER_ERROR;
-          throw error;
-        }
         res.send({
           data: {
             name: user.name,
@@ -53,17 +49,12 @@ module.exports.createUser = (req, res, next) => {
       })
       .catch((err) => {
         if (err.name === 'MongoError' && err.code === 11000) {
-          const error = new Error(err.message);
+          const error = new Error('This email is already registered');
           error.statusCode = CONFLICT_ERROR;
           next(error);
         } else if (err.name === 'VaidationError') {
           const error = new Error(err.message);
           error.statusCode = INVALID_DATA_ERROR;
-          next(error);
-        } else {
-          console.log(err);
-          const error = new Error('Internal Server error');
-          error.statusCode = SERVER_ERROR;
           next(error);
         }
       });
@@ -104,17 +95,9 @@ module.exports.updateUser = (req, res, next) => {
       });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        const error = new Error(err.message);
-        error.statusCode = INVALID_DATA_ERROR;
-        next(error);
-      } else if (err.statusCode === 404) {
-        const error = new Error('Not Found');
-        error.statusCode = err.statusCode;
-        next(error);
-      } else {
-        const error = new Error('Internal Server error');
-        error.statusCode = SERVER_ERROR;
+      if (err.name === 'MongoError' && err.code === 11000) {
+        const error = new Error('This email is already registered');
+        error.statusCode = CONFLICT_ERROR;
         next(error);
       }
     });

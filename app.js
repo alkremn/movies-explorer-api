@@ -7,7 +7,8 @@ require('dotenv').config();
 const cors = require('./middlewares/cors');
 const limiter = require('./configs/ratelimiter');
 const routes = require('./routes/index');
-const { notFound, errorHandler } = require('./middlewares/errors');
+
+const { errorHandler } = require('./middlewares/errors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
@@ -30,7 +31,6 @@ app.use(errors());
 app.use('/', routes);
 
 app.use(errorLogger);
-app.use(notFound);
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

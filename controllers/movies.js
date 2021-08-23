@@ -47,22 +47,12 @@ module.exports.createMovie = (req, res, next) => {
     nameEN,
   })
     .then((movie) => {
-      if (!movie) {
-        console.log(movie);
-        const error = new Error('Internal Server error');
-        error.statusCode = SERVER_ERROR;
-        throw error;
-      }
       res.send(movie);
     })
     .catch((err) => {
       if (err.name === 'VaidationError' || err.name === 'MongoError') {
         const error = new Error(err.message);
         error.statusCode = INVALID_DATA_ERROR;
-        next(error);
-      } else {
-        const error = new Error('Internal Server error');
-        error.statusCode = SERVER_ERROR;
         next(error);
       }
     });
@@ -83,21 +73,21 @@ module.exports.deleteMovie = (req, res, next) => {
         throw error;
       }
 
-      Movie.deleteOne(card)
+      return Movie.deleteOne(card)
         .then(() => {
           res.end();
         })
-        .catch((err) => {
-          if (err.name === 'CastError') {
-            const error = new Error('Invalid id');
-            error.statusCode = INVALID_DATA_ERROR;
-            throw error;
-          } else {
-            const error = new Error(err.message);
-            error.statusCode = SERVER_ERROR;
-            throw error;
-          }
-        });
+        .catch((err) => next(err));
     })
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        const error = new Error('Invalid id');
+        error.statusCode = INVALID_DATA_ERROR;
+        throw error;
+      } else {
+        const error = new Error(err.message);
+        error.statusCode = SERVER_ERROR;
+        throw error;
+      }
+    });
 };

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { AUTH_ERROR } = require('../error_codes');
+const { AUTH_ERROR, FORBIDDEN_ERROR } = require('../error_codes');
 const { DEV_SECRET_KEY } = require('../configs/config');
 
 const SECRET_KEY = process.env.NODE_ENV !== 'production'
@@ -22,8 +22,9 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, SECRET_KEY);
   } catch (err) {
-    err.statusCode = AUTH_ERROR;
-    next(err);
+    const error = new Error('Invalid Token');
+    error.statusCode = FORBIDDEN_ERROR;
+    next(error);
     return;
   }
 

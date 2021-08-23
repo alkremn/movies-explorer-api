@@ -16,9 +16,7 @@ module.exports.errorHandler = (err, req, res, next) => {
     res.status(err.statusCode).send({ error: err.message });
   } else if (isCelebrateError(err)) {
     res.status(INVALID_DATA_ERROR).send({
-      error: err.details.get('body')
-        ? err.details.get('body').message
-        : err.details.get('params').message,
+      error: 'Bad request',
     });
   } else {
     res.status(SERVER_ERROR).send({ error: 'Internal Server Error' });

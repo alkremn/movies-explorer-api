@@ -61,19 +61,19 @@ module.exports.deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
 
   Movie.findById(movieId)
-    .then((card) => {
-      if (!card) {
+    .then((movie) => {
+      if (!movie) {
         const error = new Error('Movie not found');
         error.statusCode = NOT_FOUND_ERROR;
         throw error;
       }
-      if (card.owner.toString() !== req.user._id) {
+      if (movie.owner.toString() !== req.user._id) {
         const error = new Error('Forbidden');
         error.statusCode = FORBIDDEN_ERROR;
         throw error;
       }
 
-      return Movie.deleteOne(card)
+      return Movie.deleteOne(movie)
         .then(() => {
           res.end();
         })
@@ -84,10 +84,11 @@ module.exports.deleteMovie = (req, res, next) => {
         const error = new Error('Invalid id');
         error.statusCode = INVALID_DATA_ERROR;
         throw error;
-      } else {
+      } else if (!err.statusCode) {
         const error = new Error(err.message);
         error.statusCode = SERVER_ERROR;
         throw error;
       }
+      next(err);
     });
 };

@@ -51,7 +51,7 @@ module.exports.createMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'VaidationError' || err.name === 'MongoError') {
-        const error = new Error(err.message);
+        const error = new Error('Bad request');
         error.statusCode = INVALID_DATA_ERROR;
         next(error);
       }

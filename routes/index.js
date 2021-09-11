@@ -12,8 +12,14 @@ router.post(
   '/signin',
   celebrate({
     [Segments.BODY]: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required().min(8),
+      email: Joi.string().required().email().messages({
+        'string.empty': 'Имеил не может быть пустым',
+        'string.email': 'Невалидный имеил',
+      }),
+      password: Joi.string().required().min(8).messages({
+        'string.empty': 'Пароль не может быть пустым',
+        'string.min': 'Пароль менее 8 символов',
+      }),
     }),
   }),
   login,
@@ -23,9 +29,20 @@ router.post(
   '/signup',
   celebrate({
     [Segments.BODY]: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required().min(8),
-      name: Joi.string().required().min(2).max(30),
+      email: Joi.string().required().email().messages({
+        'string.empty': 'Имеил не может быть пустым',
+        'string.email': 'Невалидный имеил',
+      }),
+      password: Joi.string().required().min(8).messages({
+        'string.empty': 'Пароль не может быть пустым',
+        'string.min': 'Пароль менее 8 символов',
+      }),
+      name: Joi.string().required().min(2).max(30)
+        .messages({
+          'string.empty': 'Имя не может быть пустым',
+          'string.min': 'Имя менее 2 символов',
+          'string.max': 'Имя более 30 символов',
+        }),
     }),
   }),
   createUser,

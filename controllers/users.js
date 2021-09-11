@@ -44,12 +44,15 @@ module.exports.createUser = (req, res, next) => {
           data: {
             name: user.name,
             email: user.email,
+            token: jwt.sign({ _id: user._id }, SECRET_KEY, {
+              expiresIn: '7d',
+            }),
           },
         });
       })
       .catch((err) => {
         if (err.name === 'MongoError' && err.code === 11000) {
-          const error = new Error('This email is already registered');
+          const error = new Error('Этот адрес электронной почты уже используется');
           error.statusCode = CONFLICT_ERROR;
           next(error);
         } else if (err.name === 'VaidationError') {
@@ -83,7 +86,7 @@ module.exports.updateUser = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        const error = new Error('User not found');
+        const error = new Error('Пользователь не найден');
         error.statusCode = NOT_FOUND_ERROR;
         throw error;
       }
@@ -96,7 +99,7 @@ module.exports.updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'MongoError' && err.code === 11000) {
-        const error = new Error('This email is already registered');
+        const error = new Error('Этот адрес электронной почты уже используется');
         error.statusCode = CONFLICT_ERROR;
         next(error);
       }

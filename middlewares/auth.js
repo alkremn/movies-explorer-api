@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    const error = new Error('Authorization required');
+    const error = new Error('нужна авторизация');
     error.statusCode = AUTH_ERROR;
     next(error);
     return;
@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, SECRET_KEY);
   } catch (err) {
-    const error = new Error('Invalid Token');
+    const error = new Error('Невалидный токен');
     error.statusCode = FORBIDDEN_ERROR;
     next(error);
     return;

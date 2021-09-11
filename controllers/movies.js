@@ -12,7 +12,7 @@ module.exports.getAllMovies = (req, res, next) => {
     .sort('-createdAt')
     .then((movies) => res.send({ data: movies }))
     .catch(() => {
-      const error = new Error('Internal Server error');
+      const error = new Error('Внутренная ошибка сервера');
       error.statusCode = SERVER_ERROR;
       next(error);
     });
@@ -63,12 +63,12 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(movieId)
     .then((movie) => {
       if (!movie) {
-        const error = new Error('Movie not found');
+        const error = new Error('Фильм не найдет');
         error.statusCode = NOT_FOUND_ERROR;
         throw error;
       }
       if (movie.owner.toString() !== req.user._id) {
-        const error = new Error('Forbidden');
+        const error = new Error('Нет доступа');
         error.statusCode = FORBIDDEN_ERROR;
         throw error;
       }
@@ -81,7 +81,7 @@ module.exports.deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        const error = new Error('Invalid id');
+        const error = new Error('Неверный id');
         error.statusCode = INVALID_DATA_ERROR;
         throw error;
       } else if (!err.statusCode) {

@@ -19,6 +19,8 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => res.send({
+      name: user.name,
+      email: user.email,
       token: jwt.sign({ _id: user._id }, SECRET_KEY, {
         expiresIn: '7d',
       }),
@@ -41,13 +43,11 @@ module.exports.createUser = (req, res, next) => {
     })
       .then((user) => {
         res.send({
-          data: {
-            name: user.name,
-            email: user.email,
-            token: jwt.sign({ _id: user._id }, SECRET_KEY, {
-              expiresIn: '7d',
-            }),
-          },
+          name: user.name,
+          email: user.email,
+          token: jwt.sign({ _id: user._id }, SECRET_KEY, {
+            expiresIn: '7d',
+          }),
         });
       })
       .catch((err) => {

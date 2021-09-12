@@ -73,9 +73,9 @@ module.exports.deleteMovie = (req, res, next) => {
         throw error;
       }
 
-      Movie.deleteOne(movie)
+      return Movie.deleteOne(movie)
         .then(() => {
-          res.end({});
+          res.send({});
         })
         .catch((err) => next(err));
     })

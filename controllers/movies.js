@@ -10,7 +10,7 @@ const {
 module.exports.getAllMovies = (req, res, next) => {
   Movie.find({})
     .sort('-createdAt')
-    .then((movies) => res.send({ data: movies }))
+    .then((movies) => res.send(movies))
     .catch(() => {
       const error = new Error('Внутренная ошибка сервера');
       error.statusCode = SERVER_ERROR;

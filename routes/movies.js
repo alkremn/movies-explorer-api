@@ -15,7 +15,6 @@ router.post(
   auth,
   celebrate({
     [Segments.BODY]: Joi.object().keys({
-      country: Joi.string(),
       director: Joi.string().required(),
       duration: Joi.number().required(),
       year: Joi.string().required(),
@@ -48,7 +47,7 @@ router.post(
       nameEN: Joi.string().required(),
     }),
   }),
-  createMovie,
+  createMovie
 );
 router.delete(
   '/:movieId',
@@ -58,7 +57,7 @@ router.delete(
       movieId: Joi.string().length(24).hex().required(),
     }),
   }),
-  deleteMovie,
+  deleteMovie
 );
 
 module.exports = router;

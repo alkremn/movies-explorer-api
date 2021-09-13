@@ -58,7 +58,6 @@ const movieSchema = new Schema({
   },
   country: {
     type: String,
-    required: true,
   },
 });
 

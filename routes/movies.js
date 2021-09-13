@@ -15,7 +15,7 @@ router.post(
   auth,
   celebrate({
     [Segments.BODY]: Joi.object().keys({
-      country: Joi.string().required(),
+      country: Joi.string(),
       director: Joi.string().required(),
       duration: Joi.number().required(),
       year: Joi.string().required(),

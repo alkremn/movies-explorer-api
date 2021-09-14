@@ -8,7 +8,8 @@ const movieSchema = new Schema({
     unique: true,
   },
   owner: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
   nameRU: {

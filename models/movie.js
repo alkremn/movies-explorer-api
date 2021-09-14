@@ -13,11 +13,9 @@ const movieSchema = new Schema({
   },
   nameRU: {
     type: String,
-    required: true,
   },
   nameEN: {
     type: String,
-    required: true,
   },
   description: {
     type: String,

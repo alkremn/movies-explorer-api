@@ -44,11 +44,11 @@ router.post(
         return helpers.message('Invalid Tumbnail link');
       }),
       movieId: Joi.required(),
-      nameRU: Joi.string().optional(),
-      nameEN: Joi.string().optional(),
+      nameRU: Joi.string().allow(''),
+      nameEN: Joi.string().allow(''),
     }),
   }),
-  createMovie
+  createMovie,
 );
 router.delete(
   '/:movieId',
@@ -58,7 +58,7 @@ router.delete(
       movieId: Joi.string().length(24).hex().required(),
     }),
   }),
-  deleteMovie
+  deleteMovie,
 );
 
 module.exports = router;

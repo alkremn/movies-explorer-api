@@ -91,10 +91,9 @@ module.exports.updateUser = (req, res, next) => {
         throw error;
       }
       res.send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
         _id: user._id,
+        name: user.name,
+        email: user.email,
       });
     })
     .catch((err) => {
